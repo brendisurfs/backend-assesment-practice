@@ -1,22 +1,18 @@
 package main
 
 import (
+	"brendisurfs/go-practice-api/handlers"
 	"encoding/json"
 	"io/ioutil"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
-type recipeData struct {
-	Name         string            `json:"name"`
-	Ingredients  map[string]string `json:"ingredients"`
-	Instructions map[string]string `json:"instructions"`
-}
+var DataFile map[string]handlers.Recipe
 
-var DataFile map[string]recipeData
-
-// init will load our json file into RecipeData before anything else runs.
+// Load our json file into RecipeData before anything else runs.
 func init() {
-	// "db" should be loaded here, before anything else.
 	content, err := ioutil.ReadFile("data.json")
 	if err != nil {
 		log.Fatal("could not read data.json, application will not work.")
@@ -30,5 +26,10 @@ func init() {
 
 func main() {
 	// routes go here
+	router := gin.Default()
 
+	router.GET("/recipes")
+
+	// finally, run our server.
+	router.Run(":8080")
 }
