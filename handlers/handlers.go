@@ -9,7 +9,7 @@ import (
 
 // Response struct - a type to return for each handler.
 type Response struct {
-	Body   map[string]interface{}
+	Body   recipes.DataFile
 	Status uint
 }
 
@@ -27,8 +27,14 @@ func GetAllRecipes(c *gin.Context) {
 // GetSingleRecipe [GET] - retrieves a single recipe from our data, using a string param.
 func GetSingleRecipe(c *gin.Context) {
 
-	c.JSON(http.StatusOK, recipes.RecipeData["garlicPasta"])
+	id := c.Param("name")
+	recipeData := recipes.RecipeData.Key
 
+	for _, rec := range recipeData {
+		if rec.Name == id {
+			c.JSON(http.StatusOK, rec)
+		}
+	}
 }
 
 // AddRecipe [POST] - adds an additional recipe to the backend.

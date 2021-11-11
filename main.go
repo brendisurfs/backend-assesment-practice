@@ -26,10 +26,8 @@ func LoadJSONData() {
 
 	err = json.Unmarshal(content, &recipes.RecipeData)
 	if err != nil {
-		log.Fatal("could not unmarshal json")
+		log.Fatal("could not unmarshal json", err)
 	}
-
-	log.Println(content)
 
 	fmt.Println("[OK] Data loaded.")
 }
@@ -39,7 +37,9 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/recipes", handlers.GetAllRecipes)
-	router.POST("/recipe/details/:id", handlers.GetSingleRecipe)
+	router.GET("/recipes/details/:name", handlers.GetSingleRecipe)
+
+	// router.POST("/recipe/recipes", )
 
 	// finally, run our server.
 
