@@ -38,19 +38,21 @@ func GetSingleRecipe(c *gin.Context) {
 }
 
 // AddRecipe [POST] - adds an additional recipe to the backend.
+// NOTE: if handle if the recipe already exists.
 func AddRecipe(c *gin.Context) {
 	var addedRecipe recipes.Recipe
-	// bind to recieve json and bind it to the file.
+
+	// bind to take the json and bind it to the file.
 	if err := c.BindJSON(&addedRecipe); err != nil {
-		return
+		c.JSON(400, c.Errors)
 	}
 
 	// if all goes well, add the json.
-	c.JSON(http.StatusOK, addedRecipe)
+	recipes.RecipeData.Key = append(recipes.RecipeData.Key, addedRecipe)
+	c.JSON(http.StatusOK, recipes.RecipeData)
 }
 
 // UpdateRecipe [PUT] - updates an existing recipe
-func UpdateRecipe(recipe *recipes.Recipe, c *gin.Context) (*Response, error) {
-
-	return &Response{}, nil
+func UpdateRecipe(c *gin.Context) {
+	c.JSON(http.StatusOK, nil)
 }
