@@ -41,8 +41,6 @@ func main() {
 	router.POST("/recipes", handlers.AddRecipe)
 	router.PUT("/recipes/details/:name", handlers.UpdateRecipe)
 
-	router.POST("/recipe/recipes")
-
 	// finally, run our server.
 	log.Println("server running on localhost:8080/")
 	if err := router.Run(":8080"); err != nil {
