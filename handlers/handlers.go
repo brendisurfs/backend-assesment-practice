@@ -1,42 +1,50 @@
 package handlers
 
 import (
+	"brendisurfs/go-practice-api/recipes"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
-// Recipe struct - structure of our recipe data.
-type Recipe struct {
-	Name         string            `json:"name"`
-	Ingredients  map[string]string `json:"ingredients"`
-	Instructions map[string]string `json:"instructions"`
-}
-
 // Response struct - a type to return for each handler.
 type Response struct {
-	Body   Recipe
+	Body   map[string]interface{}
 	Status uint
 }
 
 // GetAllRecipes - returns all recipes to the request.
-func GetAllRecipes(c *gin.Context) (*[]Recipe, error) {
+func GetAllRecipes(c *gin.Context) {
 
-	return nil, nil
+	res := &Response{
+		Body:   recipes.RecipeData,
+		Status: http.StatusOK,
+	}
+
+	c.JSON(http.StatusOK, res)
 }
 
-// GetSingleRecipe - retrieves a single recipe from our data, using a string param.
-func GetSingleRecipe(recipe string, c *gin.Context) (*Response, error) {
+// GetSingleRecipe [GET] - retrieves a single recipe from our data, using a string param.
+func GetSingleRecipe(c *gin.Context) {
 
-	return &Response{}, nil
+	c.JSON(http.StatusOK, recipes.RecipeData["garlicPasta"])
+
 }
 
-// AddRecipe - adds an additional recipe to the backend.
-func AddRecipe(recipe Recipe, c *gin.Context) (*Response, error) {
+// AddRecipe [POST] - adds an additional recipe to the backend.
+func AddRecipe(c *gin.Context) {
+	var addedRecipe recipes.Recipe
+	// bind to recieve json and bind it to the file.
+	if err := c.BindJSON(&addedRecipe); err != nil {
+		return
+	}
 
-	return &Response{}, nil
+	// if all goes well, add the json.
+	c.JSON(http.StatusOK, addedRecipe)
 }
 
-// UpdateRecipe - updates an existing recipe
-func UpdateRecipe(recipe Recipe, c *gin.Context) (*Response, error) {
+// UpdateRecipe [PUT] - updates an existing recipe
+func UpdateRecipe(recipe *recipes.Recipe, c *gin.Context) (*Response, error) {
 
 	return &Response{}, nil
 }

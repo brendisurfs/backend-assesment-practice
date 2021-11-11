@@ -2,34 +2,49 @@ package main
 
 import (
 	"brendisurfs/go-practice-api/handlers"
+	"brendisurfs/go-practice-api/recipes"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-var DataFile map[string]handlers.Recipe
-
 // Load our json file into RecipeData before anything else runs.
 func init() {
-	content, err := ioutil.ReadFile("data.json")
+	LoadJSONData()
+}
+
+// LoadJSONData - takes our data.json file and marshals it to a map.
+func LoadJSONData() {
+	content, err := os.ReadFile("data.json")
 	if err != nil {
-		log.Fatal("could not read data.json, application will not work.")
+		log.Fatal("could not read data.json, application will not work.", err)
+	}
+	fmt.Println("loading json")
+
+	err = json.Unmarshal(content, &recipes.RecipeData)
+	if err != nil {
+		log.Fatal("could not unmarshal json")
 	}
 
-	err = json.Unmarshal(content, &DataFile)
-	if err != nil {
-		log.Fatal("error: could not Unmarshal json to recipeData: ", err)
-	}
+	log.Println(content)
+
+	fmt.Println("[OK] Data loaded.")
 }
 
 func main() {
 	// routes go here
 	router := gin.Default()
 
-	router.GET("/recipes")
+	router.GET("/recipes", handlers.GetAllRecipes)
+	router.POST("/recipe/details/:id", handlers.GetSingleRecipe)
 
 	// finally, run our server.
-	router.Run(":8080")
+
+	log.Println("server running on localhost:8080/")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal("could not run server")
+	}
 }
